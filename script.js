@@ -88,19 +88,7 @@ document.addEventListener('DOMContentLoaded', () => {
   window.addEventListener('resize', updateSlider);
   updateSlider();
 
-  // Auto-advance
-  let autoSlide = setInterval(() => {
-    tIndex = tIndex >= maxIndex() ? 0 : tIndex + 1;
-    updateSlider();
-  }, 4500);
-
-  track?.parentElement.addEventListener('mouseenter', () => clearInterval(autoSlide));
-  track?.parentElement.addEventListener('mouseleave', () => {
-    autoSlide = setInterval(() => {
-      tIndex = tIndex >= maxIndex() ? 0 : tIndex + 1;
-      updateSlider();
-    }, 4500);
-  });
+  // Auto-advance disabled — manual navigation only
 
   /* ---- FAQ ACCORDION ---- */
   document.querySelectorAll('.faq-question').forEach(btn => {
@@ -132,16 +120,11 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 2200);
         return;
       }
-      btn.textContent = '✓ Submitted!';
-      btn.style.background = '#25d366';
-      btn.style.color = '#fff';
-      setTimeout(() => {
-        btn.textContent = 'Submit Your Details →';
-        btn.style.background = '';
-        btn.style.color = '';
-        form.querySelectorAll('input').forEach(i => i.value = '');
-        form.querySelectorAll('select').forEach(s => s.selectedIndex = 0);
-      }, 2500);
+      // Clear form fields
+      form.querySelectorAll('input').forEach(i => i.value = '');
+      form.querySelectorAll('select').forEach(s => s.selectedIndex = 0);
+      // Show thank you screen
+      showThankYou();
     });
   });
 
@@ -182,6 +165,32 @@ document.addEventListener('DOMContentLoaded', () => {
     card.addEventListener('mouseleave', function() {
       this.style.willChange = 'auto';
     });
+  });
+
+  /* ---- THANK YOU VIEW TOGGLE ---- */
+  function showThankYou() {
+    const thank = document.getElementById('thankyou');
+    if (!thank) return;
+    document.querySelectorAll('section').forEach(sec => {
+      if (sec.id === 'thankyou') {
+        sec.style.display = 'block';
+      } else {
+        sec.style.display = 'none';
+      }
+    });
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  document.getElementById('backToHome')?.addEventListener('click', (e) => {
+    e.preventDefault();
+    document.querySelectorAll('section').forEach(sec => {
+      sec.style.display = '';
+    });
+    const hero = document.getElementById('hero');
+    if (hero) {
+      const top = hero.getBoundingClientRect().top + window.scrollY - 80;
+      window.scrollTo({ top, behavior: 'smooth' });
+    }
   });
 
 });
