@@ -43,7 +43,7 @@ ul { list-style: none; }
 .container {
   max-width: 1280px;
   margin: 0 auto;
-  padding: 0 40px;
+  padding: 0 0px;
 }
 
 /* ---- ANIMATIONS ---- */
@@ -151,6 +151,9 @@ ul { list-style: none; }
   color: var(--dark);
   line-height: 1.25;
   margin-bottom: 20px;
+}
+.section-title--nowrap {
+  white-space: nowrap;
 }
 
 /* ---- FORM INPUTS ---- */
@@ -378,12 +381,14 @@ ul { list-style: none; }
   height: 100%;
   color: #fff;
   border-right: 1px solid rgba(255,255,255,0.28);
-  transition: background var(--transition), color var(--transition);
+  border-bottom: 3px solid transparent;
+  transition: background var(--transition), color var(--transition), border-color var(--transition);
 }
 .stat-item:last-of-type { border-right: 0; }
 .stat-item:hover {
   background: #ffffff;
   color: var(--dark);
+  border-bottom-color: var(--btn);
 }
 .stat-item span {
   color: inherit;
@@ -420,7 +425,7 @@ ul { list-style: none; }
   transform: translateY(-6px);
   box-shadow: var(--shadow-hover);
 }
-.service-card--highlight { /* uses same default background; special class kept only for semantics */ }
+.service-card--highlight { background: var(--secondary); }
 .service-icon {
   width: 64px; height: 64px;
   background: #fff;
@@ -643,7 +648,9 @@ ul { list-style: none; }
   padding: 96px 0;
 }
 .section-faq .section-title { margin-bottom: 48px; }
-.faq-list { max-width: 900px; }
+.faq-list {
+  max-width: 100%;
+}
 .faq-item {
   border-bottom: 1.5px solid var(--border);
 }
