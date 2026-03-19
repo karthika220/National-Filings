@@ -56,36 +56,81 @@ document.addEventListener('DOMContentLoaded', () => {
   /* ---- TESTIMONIAL SLIDER ---- */
   const track = document.getElementById('tTrack');
   const cards = track ? track.querySelectorAll('.testimonial-card') : [];
+  const tWrap = track?.parentElement;
   let tIndex = 0;
-  let cardsVisible = 3;
 
   function getCardsVisible() {
-    if (window.innerWidth <= 600) return 1.2;
+    if (window.innerWidth <= 600) return 1;
     if (window.innerWidth <= 900) return 2;
     return 3;
   }
 
+  function tMaxIndex() {
+    const n = Math.min(cards.length, getCardsVisible());
+    return Math.max(0, cards.length - n);
+  }
+
   function updateSlider() {
-    cardsVisible = getCardsVisible();
-    const cardWidth = track.parentElement.offsetWidth;
+    if (!track || !tWrap || !cards.length) return;
+    const wrapW = tWrap.offsetWidth;
     const gap = 20;
-    const singleCard = (cardWidth - gap * (Math.floor(cardsVisible) - 1)) / cardsVisible;
+    const visible = getCardsVisible();
+    const n = Math.min(cards.length, visible);
+    const singleCard = n > 0 ? (wrapW - gap * (n - 1)) / n : wrapW;
+
+    cards.forEach((card) => {
+      card.style.flex = `0 0 ${singleCard}px`;
+      card.style.minWidth = `${singleCard}px`;
+      card.style.width = `${singleCard}px`;
+      card.style.maxWidth = `${singleCard}px`;
+    });
+
+    tIndex = Math.min(tIndex, tMaxIndex());
     const offset = tIndex * (singleCard + gap);
     track.style.transform = `translateX(-${offset}px)`;
   }
 
-  const maxIndex = () => Math.max(0, cards.length - Math.floor(getCardsVisible()));
-
   document.getElementById('tNext')?.addEventListener('click', () => {
-    tIndex = tIndex >= maxIndex() ? 0 : tIndex + 1;
+    const max = tMaxIndex();
+    tIndex = tIndex >= max ? 0 : tIndex + 1;
     updateSlider();
   });
   document.getElementById('tPrev')?.addEventListener('click', () => {
-    tIndex = tIndex <= 0 ? maxIndex() : tIndex - 1;
+    const max = tMaxIndex();
+    tIndex = tIndex <= 0 ? max : tIndex - 1;
     updateSlider();
   });
 
   window.addEventListener('resize', updateSlider);
+  window.addEventListener('orientationchange', () => {
+    requestAnimationFrame(() => updateSlider());
+  });
+
+  /* Swipe on mobile */
+  let tTouchStartX = 0;
+  tWrap?.addEventListener(
+    'touchstart',
+    (e) => {
+      tTouchStartX = e.changedTouches[0].screenX;
+    },
+    { passive: true }
+  );
+  tWrap?.addEventListener(
+    'touchend',
+    (e) => {
+      const dx = e.changedTouches[0].screenX - tTouchStartX;
+      if (Math.abs(dx) < 48) return;
+      const max = tMaxIndex();
+      if (dx < 0) {
+        tIndex = tIndex >= max ? 0 : tIndex + 1;
+      } else {
+        tIndex = tIndex <= 0 ? max : tIndex - 1;
+      }
+      updateSlider();
+    },
+    { passive: true }
+  );
+
   updateSlider();
 
   // Auto-advance disabled — manual navigation only
