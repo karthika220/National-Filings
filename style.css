@@ -321,7 +321,7 @@ ul { list-style: none; }
   margin-bottom: 18px;
 }
 .hero-sub {
-  font-size: calc(0.98rem + 2px);
+  font-size: calc(0.98rem + 1px);
   color: rgba(255,255,255,0.8);
   max-width: 520px;
   margin-bottom: 30px;
@@ -934,7 +934,7 @@ ul { list-style: none; }
     max-width: 100%;
   }
   .hero-title {
-    font-size: clamp(1.35rem, 5.2vw, 1.9rem);
+    font-size: clamp(calc(1.35rem + 2px), calc(5.2vw + 2px), calc(1.9rem + 2px));
     max-width: 100%;
     overflow-wrap: break-word;
     word-wrap: break-word;
@@ -962,6 +962,9 @@ ul { list-style: none; }
 }
 
 @media (max-width: 600px) {
+  .hero-sub {
+    font-size: 0.98rem;
+  }
   .services-grid { grid-template-columns: 1fr; }
   .why-grid-top { grid-template-columns: 1fr; }
   .why-grid-bottom { grid-template-columns: 1fr; }
